@@ -1,4 +1,21 @@
 <script setup>
+import { onMounted,reactive,ref } from 'vue';
+import { api } from '../services/api.js'
+import ListPokemon from '../components/ListPokemon.vue'
+
+let pokemons = reactive(ref());
+
+async function getListPokemon() {
+    return await api.get('/pokemon?limit=151&offset=0')
+}
+
+onMounted(() => {
+    Promise.all([getListPokemon()])
+        .then(([listaPokemon])=> {
+            pokemons.value = listaPokemon.data.results
+    })
+})
+
 </script>
 
 <template>
@@ -16,7 +33,9 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6">
-                    Home1
+                    <div class="card" style="width: 18rem;">
+                        <ListPokemon v-for="(pokemon,index) in pokemons" :key="index" :name="pokemon.name"/>
+                    </div>
                 </div>
             </div>
         </div>
