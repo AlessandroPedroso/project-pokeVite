@@ -35,8 +35,8 @@ onMounted(() => {
                 </div>
                 <div class="col-sm-12 col-md-6">
                     <div class="card">
+                        
                         <div class="card-body row">
-
                             <ListPokemon v-for="(pokemon,index) in pokemons" :urlBaseSvg="urlBaseSvg + pokemon.url.split('/').at(6) + '.svg'" :key="index" :name="pokemon.name"/>
                         </div>
                     </div>
