@@ -2,10 +2,12 @@
 import { onMounted, reactive, ref,computed } from 'vue';
 import { api } from '../services/api.js'
 import ListPokemon from '../components/ListPokemon.vue'
+import CartPokemonSelected from '../components/CartPokemonSelected.vue';
 
 let urlBaseSvg = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/")
 let pokemons = reactive(ref());
-let searchPokemonField = ref('')
+let searchPokemonField = ref('');
+let pokemonSelected = reactive(ref());
 
 async function getListPokemon() {
     return await api.get('/pokemon?limit=151&offset=0')
@@ -26,24 +28,36 @@ const pokemonsFiltered = computed(() => {
     return pokemons.value 
 })
 
+async function pokemonInformation(url) {
+    const urlApi = url.match(/\/pokemon\/\d+\//)
+    return await api.get(`${urlApi}`)
+}
+
+const selectPokemon = (pokemon) => {
+    Promise.all([
+        pokemonInformation(pokemon.url)
+
+    ]).then(([pokemonData]) => {
+        pokemonSelected.value = pokemonData.data
+    })
+}
+
 </script>
 
 <template>
-    <main>
+
         <div class="container">
             <div class="row mt-4">
                 <div class="col-sm-12 col-md-6">
-                    <!-- <div class="card" style="width: 18rem;">
-                        <img style="height: 200px; width: 200px;" src="https://www.ensino.eu/media/3kyh4vko/pokemon.jpg?width=300&height=300" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p>
-                        </div>
-                    </div> -->
+                    <CartPokemonSelected 
+                    :name="pokemonSelected?.name" 
+                    :xp="pokemonSelected?.base_experience"
+                    :height="pokemonSelected?.height"
+                    :img="pokemonSelected?.sprites?.other?.dream_world?.front_default"
+                    />
                 </div>
                 <div class="col-sm-12 col-md-6">
-                    <div class="card">
+                    <div class="card cardList">
                         <div class="card-body row">
                             <div class="mb-3">
                                 <label hidden for="searchPokemonField" class="form-label">Pesquisar...</label>
@@ -52,11 +66,22 @@ const pokemonsFiltered = computed(() => {
                             </div>
                             <ListPokemon v-for="(pokemon, index) in pokemonsFiltered"
                                 :urlBaseSvg="urlBaseSvg + pokemon.url.split('/').at(6) + '.svg'" :key="index"
-                                :name="pokemon.name" />
+                                :name="pokemon.name"
+                                @click="selectPokemon(pokemon)"
+                                />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+  
 </template>
+
+
+<style scoped>
+.cardList{
+    height: 350px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+</style>
