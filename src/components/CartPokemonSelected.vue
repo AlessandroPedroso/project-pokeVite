@@ -5,6 +5,7 @@ const pokemon = defineProps(['name', 'xp', 'height','img'])
 
 <template>
     <div class="card cardPokemonSelected">
+        <h1 class="animate__animated animate__bounce">An animated element</h1>
         <img height="250" :src="pokemon.img" class="card-img-top p-2" alt="...">
         <div class="card-body">
             <h5 class="card-title text-center">{{ pokemon.name }}</h5>
