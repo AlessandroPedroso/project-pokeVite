@@ -8,6 +8,7 @@ let urlBaseSvg = ref("https://raw.githubusercontent.com/PokeAPI/sprites/master/s
 let pokemons = reactive(ref());
 let searchPokemonField = ref('');
 let pokemonSelected = reactive(ref());
+let loading = ref(false)
 
 async function getListPokemon() {
     return await api.get('/pokemon?limit=151&offset=0')
@@ -34,11 +35,15 @@ async function pokemonInformation(url) {
 }
 
 const selectPokemon = (pokemon) => {
+    loading.value = true
     Promise.all([
         pokemonInformation(pokemon.url)
 
     ]).then(([pokemonData]) => {
         pokemonSelected.value = pokemonData.data
+    }).catch(err => alert(err))
+        .finally(() => {
+        loading.value = false
     })
 }
 
@@ -46,7 +51,7 @@ const selectPokemon = (pokemon) => {
 
 <template>
 
-        <div class="container">
+        <div class="container text-body-secondary">
             <div class="row mt-4">
                 <div class="col-sm-12 col-md-6">
                     <CartPokemonSelected 
@@ -54,6 +59,7 @@ const selectPokemon = (pokemon) => {
                     :xp="pokemonSelected?.base_experience"
                     :height="pokemonSelected?.height"
                     :img="pokemonSelected?.sprites?.other?.dream_world?.front_default"
+                    :loading="loading"
                     />
                 </div>
                 <div class="col-sm-12 col-md-6">
@@ -80,7 +86,7 @@ const selectPokemon = (pokemon) => {
 
 <style scoped>
 .cardList{
-    height: 350px;
+    height: 75vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }

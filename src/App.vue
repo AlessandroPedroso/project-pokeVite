@@ -8,11 +8,11 @@ let count = ref(0)
 <template>
   <header>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-warning">
       <div class="container-fluid">
         <router-link class="navbar-brand" to='/'>
           <img src="./assets/icon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-          PoKerVite
+          <span class="text-dark">Pokemon</span>
         </router-link>
   
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -22,11 +22,11 @@ let count = ref(0)
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <router-link class="nav-link" aria-current="page" :to="{ name: 'home' }">Home</router-link>
+              <router-link class="nav-link text-dark" aria-current="page" :to="{ name: 'home' }">Home</router-link>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link class="nav-link" :to="{ name: 'about' }">About</router-link>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -38,7 +38,7 @@ let count = ref(0)
   <main>
     <router-view></router-view>
     <!-- FOOTER -->
-    <footer class="bg-primary text-light">
+    <footer class="bg-warning text-dark">
       <div>Desenvolvido por Alessandro Pedroso - {{ new Date().getFullYear() }}</div>
     </footer>
 
